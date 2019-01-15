@@ -1,0 +1,37 @@
+{% extends '@Gui/Layout/layout.twig' %}
+
+{% set widget_title = 'Add a employee' %}
+
+{% block head_title widget_title %}
+{% block section_title widget_title %}
+
+{% block action %}
+    {{ backActionButton('/employee', 'Back to Employees' | trans) }}
+{% endblock %}
+
+{% block content %}
+
+    {% embed '@Gui/Partials/widget.twig' %}
+
+        {% block widget_content %}
+
+            {{ form_start(employeeForm) }}
+            {{ form_widget(employeeForm) }}
+            <h2>Employee Address</h2>
+
+            {{ form_widget(employeeAddressForm) }}
+            <input type="submit" class="btn btn-primary safe-submit" value="{{ 'Save' | trans }}"/>
+            <input type="button" id="add-address" class="btn btn-primary safe-button"
+                   value="{{ 'Add new address' | trans }}"/>
+            {{ form_end(employeeForm) }}
+
+        {% endblock %}
+
+    {% endembed %}
+
+{% endblock %}
+
+{% block footer_js %}
+    {{ parent() }}
+    <script src="/assets/js/pyz-zed-employee-main.js"></script>
+{% endblock %}

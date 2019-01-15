@@ -1,0 +1,299 @@
+<?php
+
+/**
+ * This file is part of the Spryker Demoshop.
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
+namespace Pyz\Zed\Employee\Communication\Form;
+
+use Generated\Shared\Transfer\EmployeeAddressTransfer;
+use Spryker\Zed\Kernel\Communication\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Required;
+
+/**
+ * @method \Pyz\Zed\Employee\Persistence\EmployeeQueryContainerInerface getQueryContainer()
+ * @method \Pyz\Zed\Employee\Communication\CustomerCommunicationFactory getFactory()
+ */
+class EmployeeAddressForm extends AbstractType
+{
+    public const OPTION_SALUTATION_CHOICES = 'salutation_choices';
+    public const OPTION_COUNTRY_CHOICES = 'country_choices';
+    public const OPTION_REGION_CHOICES = 'region_choices';
+
+
+    /**
+     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver
+     *
+     * @return void
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setRequired(static::OPTION_SALUTATION_CHOICES);
+        $resolver->setRequired(static::OPTION_COUNTRY_CHOICES);
+        $resolver->setRequired(static::OPTION_REGION_CHOICES);
+    }
+
+    /**
+     * @param \Symfony\Component\Form\FormBuilderInterface $builder
+     * @param array $options
+     *
+     * @return void
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $this
+            ->addFieldFkEmployee($builder)
+            ->addFirstNameField($builder)
+            ->addLastNameField($builder)
+            ->addSalutationField($builder, $options[self::OPTION_SALUTATION_CHOICES])
+            ->addStreet1Field($builder)
+            ->addStreet2Field($builder)
+            ->addStreet3Field($builder)
+            ->addCityField($builder)
+            ->addFkCountryField($builder, $options[self::OPTION_COUNTRY_CHOICES])
+            //->addFkRegionField($builder,$options[self::OPTION_REGION_CHOICES])
+            ->addPostcodeField($builder)
+            ->addPhoneField($builder);
+    }
+
+    /**
+     * @param \Symfony\Component\Form\FormBuilderInterface $builder
+     *
+     * @return $this
+     */
+    protected function addPhoneField(FormBuilderInterface $builder)
+    {
+        $phoneConstraints = [
+            new Length(['max' => 255]),
+        ];
+
+        $builder->add(EmployeeAddressTransfer::PHONE, TextType::class, [
+            'label' => 'Phone',
+            'required' => false,
+            'constraints' => $phoneConstraints,
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @return $this
+     */
+    private function addPostcodeField(FormBuilderInterface $builder)
+    {
+        $builder->add(EmployeeAddressTransfer::POSTCODE, TextType::class,
+            [
+                'label' => 'Postcode',
+                'constraints' => $this->getTextFieldConstraints()
+            ]
+        );
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getTextFieldConstraints()
+    {
+        return [
+            new Required(),
+            new NotBlank(),
+            new Length(['max' => 100]),
+        ];
+    }
+
+    /**
+     * @param \Symfony\Component\Form\FormBuilderInterface $builder
+     * @param array $choices
+     * @return EmployeeAddressForm
+     */
+    private function addFkCountryField(FormBuilderInterface $builder, array $choices): EmployeeAddressForm
+    {
+        $builder->add(EmployeeAddressTransfer::FK_COUNTRY, ChoiceType::class, [
+            'label' => 'Country',
+            'placeholder' => 'Select one',
+            'choices' => $choices,
+            'choices_as_values' => true,
+            'constraints' => [
+                new NotBlank(),
+            ],
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @return $this
+     */
+    private function addCityField(FormBuilderInterface $builder)
+    {
+        $builder->add(EmployeeAddressTransfer::STREET3, TextType::class,
+            [
+                'label' => 'City',
+                'constraints' => $this->getTextFieldConstraints()
+            ]
+        );
+        return $this;
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @return $this
+     */
+    private function addStreet3Field(FormBuilderInterface $builder)
+    {
+        $builder->add(EmployeeAddressTransfer::STREET3, TextType::class,
+            [
+                'label' => "Street3",
+                'constraints' => $this->getTextFieldConstraints()
+            ]);
+        return $this;
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @return $this
+     */
+    private function addStreet2Field(FormBuilderInterface $builder)
+    {
+        $builder->add(EmployeeAddressTransfer::STREET2, TextType::class,
+            [
+                'label' => "Street2",
+                'constraints' => $this->getTextFieldConstraints()
+            ]);
+        return $this;
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @return $this
+     */
+    private function addStreet1Field(FormBuilderInterface $builder)
+    {
+        $builder->add(EmployeeAddressTransfer::STREET1, TextType::class,
+            [
+                'label' => "Street1",
+                'constraints' => $this->getTextFieldConstraints()
+            ]);
+        return $this;
+    }
+
+    /**
+     * @param \Symfony\Component\Form\FormBuilderInterface $builder
+     * @param array $choices
+     *
+     * @return $this
+     */
+    protected function addSalutationField(FormBuilderInterface $builder, array $choices)
+    {
+
+        $builder->add(EmployeeAddressTransfer::SALUTATION, ChoiceType::class, [
+            'label' => 'Salutation',
+            'placeholder' => 'Select one',
+            'choices' => $choices,
+            'choices_as_values' => true,
+            'constraints' => [
+                new NotBlank(),
+            ],
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * @param \Symfony\Component\Form\FormBuilderInterface $builder
+     *
+     * @return $this
+     */
+    protected function addLastNameField(FormBuilderInterface $builder)
+    {
+        $builder->add(EmployeeAddressTransfer::LAST_NAME, TextType::class, [
+            'label' => 'Last Name',
+            'constraints' => $this->getTextFieldConstraints(),
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * @param \Symfony\Component\Form\FormBuilderInterface $builder
+     *
+     * @return $this
+     */
+    protected function addFirstNameField(FormBuilderInterface $builder)
+    {
+        $builder->add(EmployeeAddressTransfer::FIRST_NAME, TextType::class, [
+            'label' => 'First Name',
+            'constraints' => $this->getTextFieldConstraints(),
+        ]);
+
+        return $this;
+    }
+
+    private function addFieldFkEmployee(FormBuilderInterface $builder)
+    {
+        $builder->add(EmployeeAddressTransfer::FK_EMPLOYEE, HiddenType::class, []);
+        return $this;
+    }
+
+    /**
+     * @deprecated Use `getBlockPrefix()` instead.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getBlockPrefix();
+    }
+
+    /**
+     * @return string
+     */
+    public function getBlockPrefix()
+    {
+        return 'employee_address';
+    }
+
+    /**
+     * @param \Symfony\Component\Form\FormBuilderInterface $builder
+     *
+     * @return $this
+     */
+    protected function addIdEmployeeField(FormBuilderInterface $builder)
+    {
+        $builder->add(EmployeeAddressTransfer::FK_EMPLOYEE, HiddenType::class);
+
+        return $this;
+    }
+
+    /**
+     * @param \Symfony\Component\Form\FormBuilderInterface $builder
+     * @param array $choices
+     * @return EmployeeAddressForm
+     */
+    private function addFkRegionField(FormBuilderInterface $builder, array $choices): EmployeeAddressForm
+    {
+
+        $builder->add(EmployeeAddressTransfer::FK_REGION, ChoiceType::class, [
+            'label' => 'Region',
+            'placeholder' => 'Select one',
+            'choices' => array_flip($choices),
+            'choices_as_values' => true,
+            'constraints' => [
+                new NotBlank(),
+            ],
+        ]);
+
+        return $this;
+    }
+}

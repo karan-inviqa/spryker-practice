@@ -1,0 +1,26 @@
+{% extends '@Gui/Layout/layout.twig' %}
+
+{% set widget_title = 'Employee deletion confirmation' %}
+
+{% block head_title widget_title %}
+{% block section_title widget_title %}
+
+{% block action %}
+    {{ backActionButton(app.request.headers.get('referer'), 'Back' | trans) }}
+{% endblock %}
+
+{% block content %}
+
+    {% embed '@Gui/Partials/widget.twig' %}
+
+        {% block widget_content %}
+
+            <a href="{{ app.request.headers.get('referer') }}" class="btn btn-back">{{ 'Back' | trans }}</a>
+            <a href="{{ url('/employee/delete/confirm', {'id-employee': idEmployee}) }}"
+               class="btn btn-danger safe-submit">{{ 'Delete account' | trans }}</a>
+
+        {% endblock %}
+
+    {% endembed %}
+
+{% endblock %}

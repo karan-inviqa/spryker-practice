@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<transfers xmlns="spryker:transfer-01"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="spryker:transfer-01 http://static.spryker.com/transfer-01.xsd">
+
+    <transfer name="Employee">
+        <property name="email" type="string"/>
+        <property name="idEmployee" type="int"/>
+        <property name="firstName" type="string"/>
+        <property name="lastName" type="string"/>
+        <property name="salutation" type="string"/>
+        <property name="createdAt" type="string"/>
+        <property name="updatedAt" type="string"/>
+        <property name="gender" type="string"/>
+        <property name="dateOfBirth" type="string"/>
+        <property name="currentAddress" type="string"/>
+        <property name="permanentAddress" type="string"/>
+        <property name="phone" type="string"/>
+        <property name="fkEmployeeState" type="int"/>
+    </transfer>
+
+    <transfer name="EmployeeAddress">
+        <property name="idAddress" type="int"/>
+        <property name="fkEmployee" type="int"/>
+        <property name="fkRegion" type="int"/>
+        <property name="fkCountry" type="int"/>
+        <property name="firstName" type="string"/>
+        <property name="lastName" type="string"/>
+        <property name="salutation" type="string"/>
+        <property name="street1" type="string"/>
+        <property name="street2" type="string"/>
+        <property name="street3" type="string"/>
+        <property name="city" type="string"/>
+        <property name="postcode" type="string"/>
+        <property name="phone" type="string"/>
+    </transfer>
+
+    <transfer name="EmployeeCreationForm">
+        <property name="employee" type="Employee"/>
+        <property name="addresses" type="EmployeeAddress[]" singular="address"/>
+    </transfer>
+
+    <transfer name="EmployeeResponse">
+        <property name="idEmployee" type="int"/>
+        <property name="email" type="string"/>
+    </transfer>
+
+</transfers>

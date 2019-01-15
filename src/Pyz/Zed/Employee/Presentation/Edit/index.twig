@@ -1,0 +1,31 @@
+{% extends '@Gui/Layout/layout.twig' %}
+
+{% set widget_title = 'Edit Employee' %}
+
+{% block head_title widget_title %}
+{% block section_title widget_title %}
+
+{% block action %}
+    {{ removeActionButton(url('/employee/delete', {'id-employee': idEmployee}), 'Delete' | trans) }}
+    {{ viewActionButton(url('/employee/view', {'id-employee': idEmployee}), 'View' | trans) }}
+    {{ backActionButton(url('/employee'), 'Back to Employees' | trans) }}
+{% endblock %}
+
+{% block content %}
+
+    {% embed '@Gui/Partials/widget.twig' %}
+
+        {% block widget_content %}
+
+            {{ form_start(employeeForm) }}
+            {{ form_widget(employeeForm) }}
+            {{ form_widget(employeeAddressForm) }}
+
+            <input type="submit" class="btn btn-primary safe-submit" value="{{ 'Save' | trans }}"/>
+            {{ form_end(employeeForm) }}
+
+        {% endblock %}
+
+    {% endembed %}
+
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends '@Gui/Layout/layout.twig' %}
+
+{% set widget_title = 'View Employee' %}
+
+{% block head_title widget_title %}
+{% block section_title widget_title %}
+
+{% block action %}
+    {{ backActionButton('/employee', 'List Employees' | trans) }}
+    {{ removeActionButton(url('/employee/delete', {'id-employee': idEmployee}), 'Delete' | trans) }}
+    {{ editActionButton('/employee/edit?id-employee=' ~ idEmployee, 'Edit Employee' | trans) }}
+{% endblock %}
+
+{% block content %}
+
+    {% embed '@Gui/Partials/widget.twig' with { widget_title: 'Employee' } %}
+
+        {% block widget_content %}
+
+            <div class="row">
+                <table class="table">
+                    <thead></thead>
+                    <tbody>
+                    <tr>
+                        <th class="col-lg-2">
+                            {{ 'Salutation' | trans }}</th>
+                        <td>{{ employee.salutation }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ 'First name' | trans }}</th>
+                        <td>{{ employee.firstName }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ 'Last name' | trans }}</th>
+                        <td>{{ employee.lastName }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ 'Email' | trans }}</th>
+                        <td>{{ employee.email }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>{{ 'Gender' | trans }}</th>
+                        <td>{{ employee.gender }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ 'Current Address' | trans }}</th>
+                        <td>{{ employee.currentAddress }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ 'Permanent Address' | trans }}</th>
+                        <td>{{ employee.permanentAddress }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ 'Phone' | trans }}</th>
+                        <td>{{ employee.phone }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ 'Date of birth' | trans }}</th>
+                        <td>{{ employee.dateOfBirth | formatDate }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ 'Joined at' | trans }}</th>
+                        <td>{{ employee.createdAt | formatDateTime }}</td>
+                    </tr>
+                    {% if employee.username is defined %}
+                        <tr>
+                            <th>{{ 'Zed Account Reference' | trans }}</th>
+                            <td>
+                                <a href="{{ url('/user/edit/update', {'id-user': employee.fkUser}) }}">{{ employee.username }}</a>
+                            </td>
+                        </tr>
+                    {% endif %}
+
+                    {% if manualEvents | length > 0 %}
+                        {% for event in manualEvents %}
+                            <span>
+                                <a class="btn btn-primary btn-warning trigger-order-single-event"
+                                   href="{{ url('/state-machine/trigger/trigger-event',
+                                       {
+                                           'event' : event,
+                                           'identifier': employee.idEmployee,
+                                           'id-state' : employee.fkEmployeeState,
+                                           redirect : '/employee/view?id-employee=' ~ employee.idEmployee
+                                       }) }}"
+                                >
+                                    {{ event }}
+                                </a></span>
+                        {% endfor %}
+                    {% else -%}
+                        No manual events
+                    {%- endif %}
+
+                    </tbody>
+                    <tfoot>
+                </table>
+            </div>
+
+            <h4>
+                Addresses
+            </h4>
+            {% if employeeAddresses|length %}
+                {% for address in employeeAddresses %}
+                    <div class="chat-message">
+                        <li>{{ address.firstName }}</li>
+                        <li>{{ address.lastName }}</li>
+                        <li>{{ address.street1 }}</li>
+                        <li>{{ address.street2 }}</li>
+                        <li>{{ address.street3 }}</li>
+                        <li>{{ address.city }}</li>
+                        <li>{{ address.country.name }}</li>
+                        <li>{{ address.postcode }}</li>
+                        <li>{{ address.phone }}</li>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="not-found">
+                    There are no address assigned to this customer.
+                </div>
+            {% endif %}
+
+
+        {% endblock %}
+    {% endembed %}
+{% endblock %}
