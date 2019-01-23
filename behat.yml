@@ -1,0 +1,17 @@
+default:
+    extensions:
+        DMore\ChromeExtension\Behat\ServiceContainer\ChromeExtension: ~
+        Behat\MinkExtension:
+            base_url: 'https://zed/'
+            sessions:
+                default:
+                    goutte:
+                        guzzle_parameters:
+                            verify: false
+                javascript:
+                    chrome:
+                        validate_certificate: false
+                        api_url: "http://chrome:9222"
+        SensioLabs\Behat\PageObjectExtension:
+            namespaces:
+                page: [Karan\Page\Page]

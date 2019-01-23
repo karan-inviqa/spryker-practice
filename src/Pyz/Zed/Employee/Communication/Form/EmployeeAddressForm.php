@@ -56,7 +56,6 @@ class EmployeeAddressForm extends AbstractType
             ->addSalutationField($builder, $options[self::OPTION_SALUTATION_CHOICES])
             ->addStreet1Field($builder)
             ->addStreet2Field($builder)
-            ->addStreet3Field($builder)
             ->addCityField($builder)
             ->addFkCountryField($builder, $options[self::OPTION_COUNTRY_CHOICES])
             //->addFkRegionField($builder,$options[self::OPTION_REGION_CHOICES])
@@ -137,26 +136,12 @@ class EmployeeAddressForm extends AbstractType
      */
     private function addCityField(FormBuilderInterface $builder)
     {
-        $builder->add(EmployeeAddressTransfer::STREET3, TextType::class,
+        $builder->add(EmployeeAddressTransfer::CITY, TextType::class,
             [
                 'label' => 'City',
                 'constraints' => $this->getTextFieldConstraints()
             ]
         );
-        return $this;
-    }
-
-    /**
-     * @param FormBuilderInterface $builder
-     * @return $this
-     */
-    private function addStreet3Field(FormBuilderInterface $builder)
-    {
-        $builder->add(EmployeeAddressTransfer::STREET3, TextType::class,
-            [
-                'label' => "Street3",
-                'constraints' => $this->getTextFieldConstraints()
-            ]);
         return $this;
     }
 
